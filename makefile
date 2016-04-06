@@ -28,6 +28,9 @@ many.txt:
 #########################
 ## program compilation
 
+question%: question%.c
+	gcc -Wall -pthread -04 -o $@ $^
+
 question1: question1.c
 	gcc -Wall -pthread -O4 -o question1 question1.c
 
