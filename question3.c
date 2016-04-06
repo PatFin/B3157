@@ -13,8 +13,12 @@ typedef struct str_thdata
     uint64_t n;
 } thdata;
 
-void print_prime_factors(uint64_t n)
+void print_prime_factors(void * ptr)
 {
+	thdata *data;            
+    data = (thdata *) ptr;
+    uint64_t n = data -> n;
+    
 	printf("%" PRIu64 ":", n);
     // your code goes here: print "n", a colon, and then the prime factors
 	uint64_t i = 2;
@@ -39,7 +43,7 @@ int main( void )
     // then read each line (e.g. with fgets() ), turn it into a number
     // (e.g. with atoll() ) and then pass it to print_prime_factors.
 
-	FILE * lecture = fopen ( "input.txt" , "r");
+	FILE * lecture = fopen ( "large.txt" , "r");
 	thdata data1, data2;   
 	uint64_t * nombre = malloc ( sizeof ( uint64_t ) );
 	uint64_t * nombre2 = malloc ( sizeof ( uint64_t ) );
