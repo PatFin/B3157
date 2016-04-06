@@ -40,17 +40,17 @@ int main( void )
     // (e.g. with atoll() ) and then pass it to print_prime_factors.
 
 	FILE * lecture = fopen ( "input.txt" , "r");
-	thdata data1, data2;   
+	thdata data1, data2;
 	uint64_t * nombre = malloc ( sizeof ( uint64_t ) );
 	uint64_t * nombre2 = malloc ( sizeof ( uint64_t ) );
 	while ( EOF != (fscanf ( lecture, "%" PRIu64 "", nombre ) ) && EOF != (fscanf ( lecture, "%" PRIu64 "", nombre2 ) ) )
 	{
 		data1.n = *nombre;
 		data1.n = *nombre2;
-		
+
 		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data1);
 		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data2);
-		
+
 		pthread_join(thread1, NULL);
 		pthread_join(thread2, NULL);
 	}
