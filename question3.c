@@ -48,8 +48,8 @@ int main( void )
 		data1.n = *nombre;
 		data1.n = *nombre2;
 		
-		pthread_create(&thread1, NULL, (void *) &print_prime_factors, *data1);
-		pthread_create(&thread1, NULL, (void *) &print_prime_factors, *data2);
+		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data1);
+		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data2);
 		
 		pthread_join(thread1, NULL);
 		pthread_join(thread2, NULL);
