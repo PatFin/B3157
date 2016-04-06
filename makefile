@@ -31,12 +31,6 @@ many.txt:
 question%: question%.c
 	gcc -Wall -pthread -O4 -o $@ $^
 
-question1: question1.c
-	gcc -Wall -pthread -O4 -o question1 question1.c
-
-question2: question2.c
-	gcc -Wall -pthread -O4 -o question2 question2.c
-
 # add your own rules when you create new programs
 
 #########################
