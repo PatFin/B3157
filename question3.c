@@ -50,7 +50,7 @@ int main( void )
 	while ( EOF != (fscanf ( lecture, "%" PRIu64 "", nombre ) ) && EOF != (fscanf ( lecture, "%" PRIu64 "", nombre2 ) ) )
 	{
 		data1.n = *nombre;
-		data1.n = *nombre2;
+		data2.n = *nombre2;
 		
 		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data1);
 		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data2);
