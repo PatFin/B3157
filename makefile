@@ -1,6 +1,4 @@
-default: help
-
-all : question1 question2
+all : question1 question2 question3
 
 help:
 	@echo Useful targets:
