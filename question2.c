@@ -7,7 +7,21 @@ void print_prime_factors(uint64_t n)
 {
 	printf("%" PRIu64 ":", n);
     // your code goes here: print "n", a colon, and then the prime factors
-	uint64_t i = 2;
+
+	while ( n % 2 == 0 )
+	{
+		printf ( " 2" );
+		n = n / 2;
+	}
+
+	while ( n % 3 == 0 )
+	{
+		printf ( " 3" );
+		n = n / 3;
+	}
+
+	uint64_t i = 5;
+	uint64_t inc = 4;
 	while ( n != 1 )
 	{
 		if ( n%i == 0 )
@@ -17,6 +31,7 @@ void print_prime_factors(uint64_t n)
 		}
 		else
 		{
+			inc = 6 - inc;
 			i++;
 		}
 	}
