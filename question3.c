@@ -58,7 +58,7 @@ int main( void )
     // then read each line (e.g. with fgets() ), turn it into a number
     // (e.g. with atoll() ) and then pass it to print_prime_factors.
 
-	FILE * lecture = fopen ( "large.txt" , "r");
+	FILE * lecture = fopen ( "input.txt" , "r");
 	thdata data1, data2;
 	uint64_t * nombre = malloc ( sizeof ( uint64_t ) );
 	uint64_t * nombre2 = malloc ( sizeof ( uint64_t ) );
@@ -68,7 +68,7 @@ int main( void )
 		data2.n = *nombre2;
 
 		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data1);
-		pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data2);
+		pthread_create(&thread2, NULL, (void *) &print_prime_factors, &data2);
 
 		pthread_join(thread1, NULL);
 		pthread_join(thread2, NULL);

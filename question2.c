@@ -44,7 +44,7 @@ int main( void )
     // then read each line (e.g. with fgets() ), turn it into a number
     // (e.g. with atoll() ) and then pass it to print_prime_factors.
 
-	FILE * lecture = fopen ( "large.txt" , "r");
+	FILE * lecture = fopen ( "input.txt" , "r");
 
 	uint64_t * nombre = malloc ( sizeof ( uint64_t ) );
 	while ( EOF != (fscanf ( lecture, "%" PRIu64 "", nombre ) ) )
