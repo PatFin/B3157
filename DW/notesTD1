@@ -1,0 +1,60 @@
+Pour récupérer des points
+
+-> Proposer d'autres solutions pour faire des jointures (~clés étrangères)
+	En javascript et MongoDB uniquement
+
+Consulter la documentation de mongoDB serai bien : http://docs.mongodb.org/manual/
+
+
+#XPATH#
+
+1. les noeuds employes
+
+//Employes
+-> '/' descendant or self
+
+/Company/Employee
+-> Les employes dont le parent est Company, pas nécessairement tous les employes.
+
+2. les emails
+
+/descendant-or-self::Email
+
+/Company/Employee/Email
+
+3. Le nombre d'employes
+
+count ( <requète XPATH/>)
+count (//Employee)
+
+4. Le deuxième employé
+
+//Employee[position()=2]
+ou
+//Employee[2]
+
+	#email du troisième
+	//Employee[3]/Email
+
+5. Employee dont le poste est chef
+(poste : la balise s'appelle Position)
+
+//Employee[contains(Position,"Chief")]
+
+6. Les noms des employés dont la catégorie est "Officer"
+
+//Employee[Category="Officer"]/LastName
+	Filtre avec prédicat puis on cherche les morceaux dans l'arbre en dessous qui nous intéresse
+
+7. (Le dernier fils de l'avant dernier employee)
+
+//Employee[position()=last()-1]/*[position()=last()]
+
+	Note, les mots position sont facultatifs :
+	//Employee[last()-1]/*[last()]
+
+##Bref on utilise des prédicats pour sélectionner ce que l'on veut :D##
+
+#Feuilles de styles#
+
+Le fichier xsl génère le frame de la page. Des balises xsl dedans 
