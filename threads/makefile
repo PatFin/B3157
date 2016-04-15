@@ -1,4 +1,4 @@
-all : question1 question2 question3
+all : question1 question2 question3 question5
 
 help:
 	@echo Useful targets:
