@@ -6,12 +6,12 @@
 
 static pthread_t thread1;
 static pthread_t thread2;
+static pthread_mutex_t mutexLecture;
 
 typedef struct str_thdata
 {
     int thread_no;
     FILE * lecture;
-	pthread_mutex_t fastmutex;
 } thdata;
 
 void print_prime_factors(void * ptr)
@@ -23,12 +23,12 @@ void print_prime_factors(void * ptr)
     uint64_t n;
 
 	//On tente d'accéder au fichier grâce à un mutex
-	pthread_mutex_lock ( &data->fastmutex );
+	pthread_mutex_lock ( &mutexLecture );
 
 	while( EOF != fscanf( lecture, "%" PRIu64 "", &n) )
 	{
 		//On rends l'accès en lecture au fichier
-		pthread_mutex_unlock ( &data->fastmutex );
+		pthread_mutex_unlock ( &mutexLecture );
 		printf("%" PRIu64 ":", n);
 		// your code goes here: print "n", a colon, and then the prime factors
 
@@ -63,7 +63,7 @@ void print_prime_factors(void * ptr)
 	}
 	//On rends l'accès en lecture au fichier pour que l'autre thread puisse se rendre compte aussi
 	//que le fichier est terminé
-	pthread_mutex_unlock ( &data->fastmutex );
+	pthread_mutex_unlock ( &mutexLecture );
 
 }
 
@@ -76,7 +76,7 @@ int main( void )
 	FILE * lecture = fopen ( "input.txt" , "r");
 	thdata data;
 	data.lecture = lecture;
-	data.fastmutex = & ( PTHREAD_MUTEX_INITIALIZER );
+	pthread_mutex_init ( &mutexLecture, NULL );
 
 
 	pthread_create(&thread1, NULL, (void *) &print_prime_factors, &data);
@@ -85,7 +85,7 @@ int main( void )
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 
-	int pthread_mutex_destroy( & ( data.fastmutex ) );
+	pthread_mutex_destroy( &mutexLecture );
 
     return 0;
 }
