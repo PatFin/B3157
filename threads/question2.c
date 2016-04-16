@@ -32,7 +32,7 @@ void print_prime_factors(uint64_t n)
 		else
 		{
 			inc = 6 - inc;
-			i++;
+			i+= inc;
 		}
 	}
 	printf("\n");

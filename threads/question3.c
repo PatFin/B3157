@@ -46,7 +46,7 @@ void print_prime_factors(void * ptr)
 		else
 		{
 			inc = 6 - inc;
-			i++;
+			i+= inc;
 		}
 	}
 	printf("\n");
