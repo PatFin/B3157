@@ -1,4 +1,4 @@
-all : question1.exe question2.exe question3.exe question5.exe
+all : question1.exe question2.exe question3.exe question5.exe question7.exe
 
 help:
 	@echo Useful targets:
