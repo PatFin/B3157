@@ -1,4 +1,4 @@
-all : question1 question2 question3 question5
+all : question1.exe question2.exe question3.exe question5.exe
 
 help:
 	@echo Useful targets:
@@ -28,7 +28,7 @@ many.txt:
 #########################
 ## program compilation
 
-question%: question%.c
+%.exe: %.c
 	gcc -Wall -pthread -O4 -o $@ $^
 
 # add your own rules when you create new programs
