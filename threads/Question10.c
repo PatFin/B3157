@@ -33,8 +33,6 @@ static facteur * get_prime_factors ( uint64_t nombre )
 //	divisé par ce diviseur. Au retour, on insère une nouvelle feuille dans
 //	l'arbre.
 {
-	//printf( "Appel à get_prime_factors pour %" PRIu64 "\n", nombre );
-
 	facteur * retour;
 
 	if ( Search ( nombre, &retour, racine ) == 0 )
@@ -87,7 +85,6 @@ static facteur * get_prime_factors ( uint64_t nombre )
 				nouvelleFeuille->nombre = nombre;
 				nouvelleFeuille->diviseur = i;
 				Insert ( nouvelleFeuille, racine );
-	//			printf("Il a été trouvé un facteur : %" PRIu64 "\n", i );
 				return nouvelleFeuille;
 			}
 			else
