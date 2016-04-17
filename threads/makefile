@@ -1,4 +1,4 @@
-all : question1.exe question2.exe question3.exe question5.exe question8.exe Question10.exe
+all : question1.exe question2.exe question3.exe question5.exe question8.exe Question10.exe Question10.1.exe
 
 help:
 	@echo Useful targets:
@@ -31,8 +31,8 @@ many.txt:
 %.exe: %.c
 	gcc -Wall -pthread -O4 -o $@ $^
 
-Question10.exe : Question10.c Stockage.c Stockage.h
-	gcc -Wall -pthread -O4 -o $@ Question10.c Stockage.c
+Question%.exe : Question%.c Stockage.c Stockage.h
+	gcc -Wall -pthread -lm -O4 -o $@ $< Stockage.c
 
 #########################
 ## program execution
