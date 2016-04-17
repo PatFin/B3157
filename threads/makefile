@@ -1,4 +1,11 @@
-all : question1.exe question2.exe question3.exe question5.exe question8.exe Question10.exe Question10.1.exe
+QUESTION2 = question2.exe question2.1.exe question2.2.exe
+QUESTION3 = question3.exe question3.1.exe question3.2.exe
+QUESTION5 = question5.exe question5.1.exe question5.2.exe
+QUESTION8 = question8.exe question8.1.exe question8.2.exe
+QUESTION10 = Question10.exe Question10.1.exe Question10.2.exe
+
+
+all : question1.exe $(QUESTION2) $(QUESTION3) $(QUESTION5) $(QUESTION8) $(QUESTION10)
 
 help:
 	@echo Useful targets:
@@ -29,7 +36,7 @@ many.txt:
 ## program compilation
 
 %.exe: %.c
-	gcc -Wall -pthread -O4 -o $@ $^
+	gcc -Wall -lm -pthread -O4 -o $@ $^
 
 Question%.exe : Question%.c Stockage.c Stockage.h
 	gcc -Wall -pthread -lm -O4 -o $@ $< Stockage.c
