@@ -38,7 +38,7 @@ unsigned int get_prime_factors ( uint64_t n,uint64_t* dest )
 	{
 		if ( n%i == 0 )
 		{
-			dest [ nombreFacteurs ++] = i;
+			dest [ nombreFacteurs ++ ] = i;
 			n = n / i;
 		}
 		else
@@ -47,7 +47,10 @@ unsigned int get_prime_factors ( uint64_t n,uint64_t* dest )
 			i+= inc;
 		}
 	}
-	dest [ nombreFacteurs ++ ] = i;
+	if ( n != 1 )
+	{
+		dest [ nombreFacteurs ++ ] = n;
+	}
 	return nombreFacteurs;
 }
 

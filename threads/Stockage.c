@@ -84,7 +84,7 @@ void Insert ( facteur * feuille, facteur * racine )
 	int estPlace = 0;
 
 	do {
-		if ( feuille->nombre < parent->nombre)
+		if ( feuille->nombre <= parent->nombre )
 		{
 			if ( parent->filsGauche == parent )
 			{

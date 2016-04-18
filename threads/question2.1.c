@@ -37,7 +37,11 @@ void print_prime_factors(uint64_t n)
 			i+= inc;
 		}
 	}
-	printf(" %" PRIu64 "\n", i );
+	if ( n != 1 )
+	{
+		printf ( " %" PRIu64 "", n );
+	}
+	printf ( "\n" );
 }
 
 int main( void )

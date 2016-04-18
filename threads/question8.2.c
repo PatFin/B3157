@@ -20,13 +20,13 @@ unsigned int get_prime_factors ( uint64_t n,uint64_t* dest )
 	unsigned int nombreFacteurs = 0;
 	while ( n % 2 == 0 )
 	{
-		dest [ nombreFacteurs ++] = 2;
+		dest [ nombreFacteurs ++ ] = 2;
 		n = n / 2;
 	}
 
 	while ( n % 3 == 0 )
 	{
-		dest [ nombreFacteurs ++] = 3;
+		dest [ nombreFacteurs ++ ] = 3;
 		n = n / 3;
 	}
 
@@ -36,7 +36,7 @@ unsigned int get_prime_factors ( uint64_t n,uint64_t* dest )
 	{
 		if ( n%i == 0 )
 		{
-			dest [ nombreFacteurs ++] = i;
+			dest [ nombreFacteurs ++ ] = i;
 			n = n / i;
 		}
 		else
@@ -45,7 +45,10 @@ unsigned int get_prime_factors ( uint64_t n,uint64_t* dest )
 			i+= inc;
 		}
 	}
-	dest [ nombreFacteurs ++ ] = i;
+	if ( n != 1 )
+	{
+		dest [ nombreFacteurs ++ ] = n;
+	}
 	return nombreFacteurs;
 }
 

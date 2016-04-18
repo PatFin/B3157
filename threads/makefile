@@ -2,7 +2,7 @@ QUESTION2 = question2.exe question2.1.exe question2.2.exe
 QUESTION3 = question3.exe question3.1.exe question3.2.exe
 QUESTION5 = question5.exe question5.1.exe question5.2.exe
 QUESTION8 = question8.exe question8.1.exe question8.2.exe
-QUESTION10 = Question10.exe Question10.1.exe Question10.2.exe
+QUESTION10 = Question10.exe Question10.1.exe Question10.2.exe Question10.3.exe
 
 
 all : question1.exe $(QUESTION2) $(QUESTION3) $(QUESTION5) $(QUESTION8) $(QUESTION10)
@@ -30,7 +30,7 @@ large.txt:
 	./generator.cs 20 64 50 > $@
 
 many.txt:
-	./generator.cs 1000 50 75 > $@
+	./generator.cs 1000 64 0 > $@
 
 #########################
 ## program compilation

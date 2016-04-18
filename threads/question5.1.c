@@ -61,7 +61,11 @@ void print_prime_factors(void * ptr)
 				i+= inc;
 			}
 		}
-		printf(" %" PRIu64 "\n", i );
+		if ( n != 1 )
+		{
+			printf ( " %" PRIu64 "", n );
+		}
+		printf ( "\n" );
 	}
 	//On rends l'accès en lecture au fichier pour que l'autre thread puisse se rendre compte aussi
 	//que le fichier est terminé
