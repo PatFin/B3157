@@ -35,7 +35,7 @@ struct facteur
 typedef struct facteur facteur;
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-int Search ( uint64_t cible, facteur ** feuille, facteur * racine );
+int Search ( uint64_t cible, facteur ** feuille );
 // Mode d'emploi :
 //	Permet de rechercher la feuille contenant le nombre passé en paramètre dans
 //	La structure de données 'racine'.
@@ -58,14 +58,18 @@ void Insert ( facteur * feuille, facteur * racine );
 //	Ah et il ne faut pas que le nombre soit déjà présent dans la structure. Ça
 //	évitera des bogues.
 
+facteur * GetRoot ( );
+
 facteur * Init ( );
 // Mode d'emploi :
-//	Permet d'initialiser la mémoire. Renvoie la racine de la mémoire créé qu'il
-//	faudra envoyer dans chacune des fonctions de ce module.
+//	Permet d'initialiser la mémoire. Renvoie une feuille qu'il faudra envoyer
+//	dans l'arbre avec Insert.
 // Contrat :
 //	Pas de contrat
 
-void End ( facteur * racine );
+void InitMemoire ( );
+
+void End ( );
 // Mode d'emploi :
 //	Permet de libérer l'espace mémoire dynamiquement alloué.
 // Contrat :

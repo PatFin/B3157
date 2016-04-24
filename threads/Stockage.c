@@ -19,21 +19,29 @@
 //------------------------------------------------------------------ Types
 
 //---------------------------------------------------- Variables statiques
-
+static facteur * racine;					//Racine de la mémoire partagée
 //------------------------------------------------------ Fonctions privées
-//static type nom ( liste de paramètres )
-// Mode d'emploi :
-//
-// Contrat :
-//
+static void end ( facteur * racine )
 // Algorithme :
-//
-//{
-//} //----- fin de nom
+//	On utilise un algorithme récursif qui va détruire les fils (gauche et droit)
+//	Avant de détruire 'racine'.
+{
+	if ( racine->filsGauche != racine )
+	{
+		end ( racine->filsGauche );
+	}
+
+	if ( racine->filsDroit != racine )
+	{
+		end ( racine->filsDroit );
+	}
+
+	free ( racine );
+}
 
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-int Search ( uint64_t cible, facteur ** feuille, facteur * racine )
+int Search ( uint64_t cible, facteur ** feuille )
 {
 	*feuille = racine;
 	int retour = 42;
@@ -80,19 +88,20 @@ void Insert ( facteur * feuille, facteur * racine )
 //	place pour la nouvelle feuille.
 {
 	facteur * parent = racine;
-	int estPlace = 0;
 
-	do {
+	for ( ; ; )
+	{
 		if ( feuille->nombre <= parent->nombre )
 		{
 			if ( parent->filsGauche == parent )
 			{
 				parent->filsGauche = feuille;
-				estPlace = 42;
+				return;
 			}
 			else
 			{
 				parent = parent->filsGauche;
+				continue;
 			}
 		}
 		else
@@ -100,41 +109,59 @@ void Insert ( facteur * feuille, facteur * racine )
 			if ( parent->filsDroit == parent )
 			{
 				parent->filsDroit = feuille;
-				estPlace = 42;
+				return;
 			}
 			else
 			{
 				parent = parent->filsDroit;
+				continue;
 			}
 		}
-	} while ( estPlace == 0 );
+	}
 }
 
 facteur * Init ( )
 {
-	facteur * racine = malloc ( sizeof ( facteur ) );
+	facteur * feuille = malloc ( sizeof ( facteur ) );
+	feuille->facteur = feuille;
+	feuille->diviseur = 2;
+	feuille->filsDroit = feuille;
+	feuille->filsGauche = feuille;
+	feuille->nombre = 2;
+
+	return feuille;
+} //----- fin de InitMemoire
+
+void InitMemoire ( )
+{
+	racine = malloc ( sizeof ( facteur ) );
 	racine->facteur = racine;
-	racine->diviseur = 2;
+	//racine->diviseur = 4006319;
+	//racine->diviseur = 2662183033;
+	racine->diviseur = 2281211;
 	racine->filsDroit = racine;
 	racine->filsGauche = racine;
-	racine->nombre = 2;
+	racine->nombre = 2281211;
+} //----- fin de InitMemoire
 
+facteur * GetRoot ( )
+{
 	return racine;
-} //----- fin de Init
+}
 
-void End ( facteur * racine )
+void End ( )
 // Algorithme :
 //	On utilise un algorithme récursif qui va détruire les fils (gauche et droit)
 //	Avant de détruire 'racine'.
 {
 	if ( racine->filsGauche != racine )
 	{
-		End ( racine->filsGauche );
+		end ( racine->filsGauche );
 	}
 
 	if ( racine->filsDroit != racine )
 	{
-		End ( racine->filsDroit );
+		end ( racine->filsDroit );
 	}
 
 	free ( racine );

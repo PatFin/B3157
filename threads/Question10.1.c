@@ -36,7 +36,7 @@ static facteur * get_prime_factors ( uint64_t nombre )
 {
 	facteur * retour;
 
-	if ( Search ( nombre, &retour, racine ) == 0 )
+	if ( Search ( nombre, &retour ) == 0 )
 	{
 		//Le nombre est connu !
 		//printf( "Nombre Connu : %" PRIu64 "\n", nombre );
@@ -108,7 +108,7 @@ static void print_prime_factors ( uint64_t nombre )
 //	Les facteurs premiers de nombre doivent avoir été préalablement calculés.
 {
 	facteur * feuille;
-	Search ( nombre, &feuille, racine );
+	Search ( nombre, &feuille );
 
 	printf("%" PRIu64 ":", nombre);
 
@@ -125,7 +125,8 @@ static void print_prime_factors ( uint64_t nombre )
 //---------------------------------------------------- Fonctions publiques
 int main ( void )
 {
-	racine = Init ( );
+	InitMemoire ( );
+	racine = GetRoot ( );
 	/*
 	facteur * buffer;
 	facteur * nouvelleFeuille = Init ( );
@@ -163,6 +164,6 @@ int main ( void )
 		print_prime_factors ( * nombre );
 	}
 
-	End ( racine );
+	End ( );
 	return 0;
 } //----- fin de Main

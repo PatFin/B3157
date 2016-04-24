@@ -1,12 +1,12 @@
 /*************************************************************************
-                           Question10.3  -  description
+                           Question10.4  -  description
                              -------------------
     début                : XXX
     copyright            : (C) XXX par XXX
     e-mail               : XXX
 *************************************************************************/
 
-//---- Réalisation du module <Question10.3> (fichier Question10.3.c) ---
+//---- Réalisation du module <Question10.4> (fichier Question10.4.c) ---
 
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
@@ -26,7 +26,6 @@ typedef struct str_thdata					//Données associées à un thread
     pthread_mutex_t * mutexMemoire;
 } thdata;
 //---------------------------------------------------- Variables statiques
-//static facteur * racine;					//Racine de la mémoire partagée
 static FILE * lecture;						//Pointeur de lecture du fichier
 static pthread_t thread1;					//Premier Thread
 static pthread_t thread2;					//Second Thread
@@ -35,22 +34,11 @@ static pthread_mutex_t mutexLecture;		//Mutex pour la lecture du fichier
 #ifndef NODISPLAY
 static pthread_mutex_t mutexAffichage;		//Mutex pour affichage
 #endif
-static pthread_mutex_t mutexMemThr1;		//Mutex pour l'accès à la mémoire T1
-static pthread_mutex_t mutexMemThr2;		//Mutex pour l'accès à la mémoire T2
+//static pthread_mutex_t mutexMemThr1;		//Mutex pour l'accès à la mémoire T1
+//static pthread_mutex_t mutexMemThr2;		//Mutex pour l'accès à la mémoire T2
 //------------------------------------------------------ Fonctions privées
-static void reserverMemoirePourEcriture ( )
-{
-	pthread_mutex_lock ( &mutexMemThr2 );
-	pthread_mutex_lock ( &mutexMemThr1 );
-}
 
-static void libererMemoireApresEcriture ( )
-{
-	pthread_mutex_unlock ( &mutexMemThr2 );
-	pthread_mutex_unlock ( &mutexMemThr1 );
-}
-
-static facteur * get_prime_factors ( uint64_t nombre, pthread_mutex_t * mutexLectureMemoire )
+static facteur * get_prime_factors ( uint64_t nombre )
 // Mode d'emploi :
 //	Calcule les facteurs premiers du nombre passé en paramètre et les stocke
 //	dans la structure de données.
@@ -63,45 +51,36 @@ static facteur * get_prime_factors ( uint64_t nombre, pthread_mutex_t * mutexLec
 {
 	facteur * retour;
 
-	pthread_mutex_lock ( mutexLectureMemoire );
 	if ( Search ( nombre, &retour ) == 0 )
 	{
-		pthread_mutex_unlock ( mutexLectureMemoire );
-		//Le nombre est connu !
-		//printf( "Nombre Connu : %" PRIu64 "\n", nombre );
 		return retour;
 	}
 	else
 	{
-		pthread_mutex_unlock ( mutexLectureMemoire );
-
 		//Il faut trouver un facteur au nombre
-		facteur * nouvelleFeuille;
+		facteur * nouvelleFeuille = malloc ( sizeof ( facteur ) );
+		nouvelleFeuille->filsGauche = nouvelleFeuille;
+		nouvelleFeuille->filsDroit = nouvelleFeuille;
 
 		if ( nombre % 2 == 0 )
 		{
-			nouvelleFeuille = Init ( );
 			nouvelleFeuille->nombre = nombre;
 			nouvelleFeuille->diviseur = 2;
-			nouvelleFeuille->facteur = get_prime_factors ( nombre / 2, mutexLectureMemoire );
+			nouvelleFeuille->facteur = get_prime_factors ( nombre / 2 );
 
-			reserverMemoirePourEcriture ( );
 			Insert ( nouvelleFeuille, retour );
-			libererMemoireApresEcriture ( );
 
 			return nouvelleFeuille;
 		}
 
 		if ( nombre % 3 == 0 )
 		{
-			nouvelleFeuille = Init ( );
 			nouvelleFeuille->nombre = nombre;
 			nouvelleFeuille->diviseur = 3;
-			nouvelleFeuille->facteur = get_prime_factors ( nombre / 3, mutexLectureMemoire );
+			nouvelleFeuille->facteur = get_prime_factors ( nombre / 3 );
 
-			reserverMemoirePourEcriture ( );
 			Insert ( nouvelleFeuille, retour );
-			libererMemoireApresEcriture ( );
+
 			return nouvelleFeuille;
 		}
 
@@ -109,15 +88,13 @@ static facteur * get_prime_factors ( uint64_t nombre, pthread_mutex_t * mutexLec
 		uint64_t inc = 4;
 		while ( i * i < nombre )
 		{
-			if ( nombre%i == 0 )
+			if ( nombre % i == 0 )
 			{
-				nouvelleFeuille = Init ( );
-				nouvelleFeuille->facteur = get_prime_factors ( nombre / i, mutexLectureMemoire );	//Appel récursif;
+				nouvelleFeuille->facteur = get_prime_factors ( nombre / i );	//Appel récursif;
 				nouvelleFeuille->nombre = nombre;
 				nouvelleFeuille->diviseur = i;
-				reserverMemoirePourEcriture ( );
 				Insert ( nouvelleFeuille, retour );
-				libererMemoireApresEcriture ( );
+
 				return nouvelleFeuille;
 			}
 			else
@@ -127,29 +104,26 @@ static facteur * get_prime_factors ( uint64_t nombre, pthread_mutex_t * mutexLec
 			}
 		}//-- fin while
 		//On est sorti de la boucle -> nombre est nécessairement premier
-		nouvelleFeuille = Init ( );
 		nouvelleFeuille->nombre = nombre;
 		nouvelleFeuille->diviseur = nombre;
-		reserverMemoirePourEcriture ( );
+		nouvelleFeuille->facteur = nouvelleFeuille;
 		Insert ( nouvelleFeuille, retour );
-		libererMemoireApresEcriture ( );
+
 		return nouvelleFeuille;
 	}
 }
 
 #ifndef NODISPLAY
-static void print_prime_factors ( uint64_t nombre )
+static void print_prime_factors ( facteur * feuille )
 // Mode d'emploi :
 //	Permet d'afficher les facteurs premiers du nombre  passé en paramètre.
 // Contrat :
 //	Les facteurs premiers de nombre doivent avoir été préalablement calculés.
 {
-	facteur * feuille;
-	Search ( nombre, &feuille );
 
 	//On veut commencer à afficher, on protège la ressource
 	pthread_mutex_lock ( &mutexAffichage );
-	printf("%" PRIu64 ":", nombre);
+	printf("%" PRIu64 ":", feuille->nombre);
 	while( feuille->facteur != feuille )
 	{
 		printf( " %" PRIu64"", feuille->diviseur );
@@ -163,8 +137,9 @@ static void print_prime_factors ( uint64_t nombre )
 
 void threadMain ( void * thrData )
 {
-	thdata * data = (thdata *) thrData;
 	uint64_t nombre;
+	facteur * nombreCalcule;
+
 	//On veut lire, on protège
 	pthread_mutex_lock ( &mutexLecture );
 	while ( EOF != (fscanf ( lecture, "%" PRIu64 "", &nombre ) ) )
@@ -173,11 +148,10 @@ void threadMain ( void * thrData )
 		pthread_mutex_unlock ( &mutexLecture );
 
 		//Calcul des facteurs
-		get_prime_factors ( nombre, data->mutexMemoire );
-#ifndef NODISPLAY
+		nombreCalcule = get_prime_factors ( nombre );
+
 		//Affichage
-		print_prime_factors ( nombre );
-#endif
+		print_prime_factors ( nombreCalcule );
 	}
 	pthread_mutex_unlock ( &mutexLecture );
 }
@@ -194,35 +168,28 @@ int main ( void )
 
 	//Création des mutex pour la lecture du fichier et l'affichage
 	pthread_mutex_init ( &mutexLecture, NULL );
-#ifndef NODISPLAY
-	pthread_mutex_init ( &mutexAffichage, NULL );
-#endif
-	pthread_mutex_init ( &mutexMemThr1, NULL );
-	pthread_mutex_init ( &mutexMemThr2, NULL );
 
-	//Création des paquest de données attachés aux threads
-	thdata dataThread1;
-	dataThread1.mutexMemoire = &mutexMemThr1;
-	thdata dataThread2;
-	dataThread2.mutexMemoire = &mutexMemThr2;
+	pthread_mutex_init ( &mutexAffichage, NULL );
 
 	//Création des threads
-	pthread_create( &thread1, NULL, (void *) &threadMain, &dataThread1 );
-	pthread_create( &thread2, NULL, (void *) &threadMain, &dataThread2 );
+	pthread_create( &thread1, NULL, (void *) &threadMain, NULL );
+	pthread_create( &thread2, NULL, (void *) &threadMain, NULL );
+
+//------------------------------PHASE MOTEUR -----------------------------------
 
 	//Attente de la fin des threads
 	pthread_join( thread1, NULL );
+	pthread_join( thread2, NULL );
 
 	//Destruction des mutex pour lecture fichier et affichage
 	pthread_mutex_destroy ( &mutexLecture );
-#ifndef NODISPLAY
+
 	pthread_mutex_destroy ( &mutexAffichage );
-#endif
-	pthread_mutex_destroy ( &mutexMemThr1 );
-	pthread_mutex_destroy ( &mutexMemThr2 );
+
+	//Fermeture du fichier
+	fclose ( lecture );
 
 	//Destruction de la mémoire
 	End ( );
-
 	return 0;
 } //----- fin de Main
