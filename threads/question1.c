@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <stdlib.h>
+#include <math.h>
 
 void print_prime_factors(uint64_t n)
 {
@@ -30,7 +32,12 @@ int main(void)
     print_prime_factors(84); // expected result:   84: 2 2 3 7
 
     // expected result:   429496729675917: 3 18229 7853726291
-    print_prime_factors(429496729675917);
+    //print_prime_factors(42949672);
+
+	uint64_t blop = 0; // pow ( 2, 63 );
+	uint64_t ordre = __builtin_clzll ( blop );
+
+	printf("%" PRIu64 " : %" PRIu64"\n", blop, ordre );
 
     return 0;
 }
