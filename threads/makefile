@@ -2,9 +2,10 @@ QUESTION2 = question2.exe question2.1.exe question2.2.exe
 QUESTION3 = question3.exe question3.1.exe question3.2.exe
 QUESTION5 = question5.exe question5.1.exe question5.2.exe
 QUESTION8 = question8.exe question8.1.exe question8.2.exe
-QUESTION10 = Question10.exe Question10.1.exe Question10.2.exe Question10.3.exe
+QUESTION10 = Question10.1.exe Question10.2.exe Question10.3.exe Question10.4.exe Question10.5.exe Question10.6.exe Question10.7.exe Question10.8.exe
 
-
+CFLAGS = -I/lib -L/lib/x86_64-linux-gnu/ -L/usr/lib/x86_64-linux-gnu/
+#-DNODISPLAY
 all : question1.exe $(QUESTION2) $(QUESTION3) $(QUESTION5) $(QUESTION8) $(QUESTION10)
 
 help:
@@ -27,19 +28,22 @@ medium.txt:
 	./generator.cs 20 50 50 > $@
 
 large.txt:
-	./generator.cs 20 64 50 > $@
+	./generator.cs 200 64 50 > $@
 
 many.txt:
-	./generator.cs 1000 64 0 > $@
+	./generator.cs 1000 64 30 > $@
 
 #########################
 ## program compilation
 
 %.exe: %.c
-	gcc -Wall -lm -pthread -O4 -o $@ $^
+	gcc -Wall $(CFLAGS) -lm -pthread -O4 -o $@ $^
 
 Question%.exe : Question%.c Stockage.c Stockage.h
-	gcc -Wall -pthread -lm -O4 -o $@ $< Stockage.c
+	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< Stockage.c
+
+Question10.6.exe : Question10.6.c StockageTable.c StockageTable.h
+	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< StockageTable.c
 
 #########################
 ## program execution
