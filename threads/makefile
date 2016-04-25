@@ -37,13 +37,13 @@ many.txt:
 ## program compilation
 
 %.exe: %.c
-	gcc -Wall $(CFLAGS) -lm -pthread -O4 -o $@ $^
+	gcc -Wall $(CFLAGS) -lm -pthread -Ofast -o $@ $^
 
 Question%.exe : Question%.c Stockage.c Stockage.h
-	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< Stockage.c
+	gcc -Wall $(CFLAGS) -pthread -lm -Ofast -o $@ $< Stockage.c
 
 Question10.6.exe : Question10.6.c StockageTable.c StockageTable.h
-	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< StockageTable.c
+	gcc -Wall $(CFLAGS) -pthread -lm -Ofast -o $@ $< StockageTable.c
 
 #########################
 ## program execution
