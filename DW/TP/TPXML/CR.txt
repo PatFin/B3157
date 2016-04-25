@@ -1,0 +1,20 @@
+B3157
+Samuel
+Patrick
+
+Etape 1
+
+Manque : Champ e-mail dans infos
+
+Etape 2 :
+
+1) //infos/mise_en_forme_par/auteur
+2) //corps/paragr[@type='narration']
+3) //corps/paragr/phrase[@langue='fr']
+4) //corps/paragr/phrase[position()=3]
+5) (//corps/paragr/phrase)[position()=9]
+6) //corps/paragr/phrase[starts-with(.,"Je")]
+7) //corps/paragr[not(@type=preceding-sibling::paragr/@type)]/@type
+
+Etape 3:
+
