@@ -88,26 +88,6 @@
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //extraction de noms d'employ�es du fichier � l'aide de Javascript puis modification du "nom"
-        function ajaxCreateurs(xmlDocumentUrl) {
-
-          //chargement du fichier XML
-          var xmlDocument = getHttpXML(xmlDocumentUrl);
-          //extraction des noms � partir du document XML
-          var lesNoms = xmlDocument.getElementsByTagName("unCreateur");
-
-          // Parcours de la liste des noms et
-          // construction d'une chaine de charact�res contenant les noms s�par�s par des espaces
-          // longueur d'une liste : attribut 'length'
-          // acc�s au texte d'un noeud "LastName" : NOM_NOEUD.firstChild.nodeValue
-          var chaineDesNoms = "";
-          for (i=0;i<lesNoms.length;i++) {
-            if (i>0) { chaineDesNoms = chaineDesNoms +", "; }
-	        chaineDesNoms=chaineDesNoms +lesNoms[i].firstChild.nodeValue + " ";
-          }
-
-          // Appel (ou recopie) de setBinome(...) ou bien autre fa�on de modifier le texte de l'�l�ment "span"
-          setNom(chaineDesNoms);
-        }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         function ajaxBinomeDate(xmlDocumentUrl, xslDocumentUrl, newElementName) {
@@ -261,6 +241,45 @@
 		   document.body.style.background = colour;
 		   document.getElementById(idButton).style.color = 'white';
 		}
+		
+		 //extraction de noms d'employ�es du fichier � l'aide de Javascript puis modification du "nom"
+        function ajaxCreateurs(xmlDocumentUrl) {
+
+          //chargement du fichier XML
+          var xmlDocument = getHttpXML(xmlDocumentUrl);
+          //extraction des noms � partir du document XML
+          var tableauTitre = xmlDocument.getElementsByTagName("title");
+
+          // Parcours de la liste des noms et
+          // construction d'une chaine de charact�res contenant les noms s�par�s par des espaces
+          // longueur d'une liste : attribut 'length'
+          // acc�s au texte d'un noeud "LastName" : NOM_NOEUD.firstChild.nodeValue
+          var titre = "";
+		  var titreTrouve = "";
+		  var parent;
+		  
+          for (i=0;i<tableauTitre.length;i++) {
+			titre = "" + tableauTitre[i].firstChild.nodeValue;
+			if(titre.includes("Workaholics"))
+			{
+				parent = tableauTitre[i].parentNode;
+				
+			}
+          }
+			var dtstart = parent.getElementsByTagName("dtstart")[0].innerHTML;
+			var dtend = parent.getElementsByTagName("dtend")[0].innerHTML;
+			var summary = parent.getElementsByTagName("summary")[0].innerHTML;
+			var url = parent.getElementsByTagName("url")[0].innerHTML;
+			var description = parent.getElementsByTagName("description")[0].innerHTML;
+			
+			var date = dtstart.substring(6,8) + "-" + dtstart.substring(4,6) + "-" + dtstart.substring(0,4);
+			var heureDebut = dtstart.substring(9,11)+ "h" + dtstart.substring(11,13);
+			var heureFin = dtend.substring(9,11)+ "h" + dtend.substring(11,13);
+			
+			var affiche = "le " +  date + " de " + heureDebut + " à " + heureFin ;
+			
+			setNom(affiche);
+        }
 
     </script>
 </head>
@@ -288,8 +307,8 @@
 <p class="instruction">Vous trouverez des informations compl�mentaires sur le site de w3schools.com sur les m�thodes <a href="http://www.w3schools.com/dom/dom_node.asp" onClick="window.open(this.href); return false;">DOM en g�n�ral</a> et sur les m�thodes <a href="http://www.w3schools.com/jsref/dom_obj_document.asp" onClick="window.open(this.href); return false;">DOM sp�cifique html</a> ainsi que sur le <a href="http://www.w3schools.com/js/default.asp">javascript</a> en g&eacute;n&eacute;ral.</p>
 
 <p>
-    <input id="myButton1" type="button" value="1. AJAX simple (fn : setNom)" onClick="changeBackground('blue','myButton1');" /><br />
-    <input id="myButton2" type="button" value="2. AJAX avec DOM sur calendar-short.xml (fn : ajaxCreateurs)" onClick="ajaxCreateurs('fichiersPourAjax/calendar-short.xml');" /><br />
+    <input id="myButton1" type="button" value="1. Met la couleur de fond en bleu et celle du texte du bouton en blanc" onClick="changeBackground('blue','myButton1');" /><br />
+    <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics" onClick="ajaxCreateurs('fichiersPourAjax/calendar-short.xml');" /><br />
     <input id="myButton3" type="button" value="3. Feuille de style xsl (calendar-binome-date.xsl) sur xml (calendar-short.xml) (fn : ajaxBinomeDate) " onClick="ajaxBinomeDate('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-binome-date.xsl','ul');" /><br />
     <input id="myButton4" type="button" value="4. Affichage des d�tails d'un �venement (fn : ajaxDetailsEpisode12Workaholics)" onClick="ajaxDetailsEpisode12Workaholics('fichiersPourAjax/exemple-event-workaholics.json','remplacerCeci');" /><br />
 </p>
