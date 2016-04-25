@@ -61,6 +61,7 @@
 
           return httpAjax.responseXML;
         }
+		
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Charge le fichier JSON se trouvant � l'URL donn�e en param�tre et le retourne
@@ -253,11 +254,20 @@
             moreInfos.appendChild(document.createTextNode (" "));
             moreInfos.appendChild(imdbVotesLabel);
         }
+		
+		// Change la couleur de l'arri�re plan
+		
+		function changeBackground(colour,idButton) {
+		   document.body.style.background = colour;
+		   document.getElementById(idButton).style.color = 'white';
+		}
 
     </script>
 </head>
 
 <body id="body">
+ 
+ <!--<BODY onload="changeBackground('red');">-->
 
 <div class="container">
 
@@ -278,7 +288,7 @@
 <p class="instruction">Vous trouverez des informations compl�mentaires sur le site de w3schools.com sur les m�thodes <a href="http://www.w3schools.com/dom/dom_node.asp" onClick="window.open(this.href); return false;">DOM en g�n�ral</a> et sur les m�thodes <a href="http://www.w3schools.com/jsref/dom_obj_document.asp" onClick="window.open(this.href); return false;">DOM sp�cifique html</a> ainsi que sur le <a href="http://www.w3schools.com/js/default.asp">javascript</a> en g&eacute;n&eacute;ral.</p>
 
 <p>
-    <input id="myButton1" type="button" value="1. AJAX simple (fn : setNom)" onClick="setNom(document.getElementById('leNoBinomeAInserer').value);" /> <input id="leNoBinomeAInserer" type="text" value="B3153" /><br />
+    <input id="myButton1" type="button" value="1. AJAX simple (fn : setNom)" onClick="changeBackground('blue','myButton1');" /><br />
     <input id="myButton2" type="button" value="2. AJAX avec DOM sur calendar-short.xml (fn : ajaxCreateurs)" onClick="ajaxCreateurs('fichiersPourAjax/calendar-short.xml');" /><br />
     <input id="myButton3" type="button" value="3. Feuille de style xsl (calendar-binome-date.xsl) sur xml (calendar-short.xml) (fn : ajaxBinomeDate) " onClick="ajaxBinomeDate('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-binome-date.xsl','ul');" /><br />
     <input id="myButton4" type="button" value="4. Affichage des d�tails d'un �venement (fn : ajaxDetailsEpisode12Workaholics)" onClick="ajaxDetailsEpisode12Workaholics('fichiersPourAjax/exemple-event-workaholics.json','remplacerCeci');" /><br />
