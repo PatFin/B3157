@@ -110,10 +110,16 @@
              // Premier �l�ment fils du parent (balise span dans la page)
              var elementHtmlARemplacer = recupererPremierElementEnfant(elementHtmlParent);
              // Premier �l�ment "elementName" du nouveau document (par exemple, "ul", "table"...)
-             var elementAInserer = newXmlDocument.getElementsByTagName(newElementName)[0];
+             var elementAInserer = newXmlDocument.getElementsByTagName(newElementName);
 
              // Remplacement de l'�l�ment
-             elementHtmlParent.replaceChild(elementAInserer,elementHtmlARemplacer);
+             elementHtmlParent.replaceChild(elementAInserer[0],elementHtmlARemplacer);
+
+			 //Le premier élément a été remplacé. On peut maintenant faire une boucle pour insérer tous les éléments suivants
+			 for ( var i = 1; i < elementAInserer.length; i++)
+			 {
+				 elementHtmlParent.appendChild(elementAInserer[i]);
+			 }
 
 		 }
 
@@ -286,7 +292,7 @@
     <input id="myButton1" type="button" value="1. Changement de couleur" onClick="changeBackground('blue','myButton1');" /><br />
     <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics via une feuille xsl" onClick="actionBouton2();" /><br />
     <input id="myButton3" style="visibility:hidden;" type="button" value="3. Affiche les détails de l'épisode de Workaholics" onClick="actionBouton3();" /><br />
-    <input id="myButton4" type="button" value="4. Affichage des détails d'un évenement (fn : ajaxDetailsEpisode12Workaholics)" onClick="ajaxDetailsEpisode12Workaholics('fichiersPourAjax/exemple-event-workaholics.json','remplacerCeci');" /><br />
+    <input id="myButton4" type="button" value="4. Affichage de tous les évènements" onClick="insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar.xsl','ul','calendar');" /><br />
 </p>
 
 <div id="remplacerParW">
