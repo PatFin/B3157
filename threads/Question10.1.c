@@ -127,33 +127,6 @@ int main ( void )
 {
 	InitMemoire ( );
 	racine = GetRoot ( );
-	/*
-	facteur * buffer;
-	facteur * nouvelleFeuille = Init ( );
-	nouvelleFeuille->nombre = 3;
-
-	while ( Search ( 3, &buffer, racine ) == -1 )
-	{
-		printf ( "Feuille 3 non trouvée\n" );
-		Insert ( nouvelleFeuille, racine );
-	}
-
-	printf( "%" PRIu64 "\n", buffer->nombre );
-
-	nouvelleFeuille = Init ( );
-	nouvelleFeuille->nombre = 1;
-
-	while ( Search ( 1, &buffer, racine ) == -1 )
-	{
-		printf ( "Feuille 1 non trouvée\n" );
-		Insert ( nouvelleFeuille, racine );
-	}
-
-	printf( "%" PRIu64 "\n", buffer->nombre );
-
-	print_prime_factors ( 2 );
-	print_prime_factors ( 3 );
-	*/
 
 	FILE * lecture = fopen ( "input.txt" , "r");
 

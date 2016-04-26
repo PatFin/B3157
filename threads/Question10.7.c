@@ -99,7 +99,6 @@ static unsigned int get_prime_factors ( uint64_t * resultat )
 	}//-- fin while
 	//On est sorti de la boucle -> nombre est nécessairement premier
 
-	//printf(" %" PRIu64 "\n", nombre );
 	resultat [ compteur ++ ] = nombre;
 
 	return compteur;
