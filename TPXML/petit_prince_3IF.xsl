@@ -55,11 +55,10 @@
 				</tr>
 			</tbody>
 		</table>
+			<!-- affichage d une ligne horizontale --> 
 			<hr/>
-<!-- affichage d une ligne horizontale --> 
-			
-			       
-<!-- Affichage du début du texte -->
+
+			<!-- Affichage du début du texte -->
 			      <h3>Début du texte:</h3>
 		
 
@@ -75,6 +74,7 @@
 
 	
 
+  <!-- Affichage des infos en en tête -->
 	<xsl:template match="infos">
 
 		<blockquote style="color:darkgreen">
@@ -87,25 +87,31 @@
 		<xsl:text>Auteurs: </xsl:text>
 		<xsl:for-each select="//infos/mise_en_forme_par/auteur">
 			<xsl:value-of select="."/>
-			<xsl:if test =" preceding-sibling::auteur[1]/@NoBinome = auteur[1]/@NoBinome">
+			<xsl:choose>
+			        <xsl:when test="not(.=//infos/mise_en_forme_par/auteur[position()=last()])">
+			          	<xsl:if test ="not(contains(string(./@NoBinome),string(following-sibling::*[1]/@NoBinome)))">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="./@NoBinome"/>
+			
+					<xsl:text>) </xsl:text>
+				</xsl:if>
+				<xsl:text> et </xsl:text>
+			        </xsl:when>
+			        <xsl:otherwise>
+			          
 				<xsl:text> (</xsl:text>
-				<xsl:value-of select="//infos/mise_en_forme_par/auteur/@NoBinome"/>
+				<xsl:value-of select="./@NoBinome"/>
 		
 				<xsl:text>)</xsl:text>
-			</xsl:if>
-			<xsl:if test ="boolean(//infos/mise_en_forme_par/auteur[./@NoBinome = preceding-sibling::auteur/@NoBinome or ./@NoBinome = following-sibling::auteur/@NoBinome])">
-			<xsl:text>kzhgoeruhg)</xsl:text>
-			</xsl:if>
+			
+			        </xsl:otherwise>
+			 </xsl:choose>
+			
 			<xsl:if test ="not(.=//infos/mise_en_forme_par/auteur[position()=last()])">
-				<xsl:text> et </xsl:text>
+				
 			</xsl:if>
-		
 		</xsl:for-each>
 
-		<xsl:text> (</xsl:text>
-		<xsl:value-of select="//infos/mise_en_forme_par/auteur/@NoBinome"/>
-
-		<xsl:text>)</xsl:text>
 		<br/>
 		<xsl:text>Email du responsable: </xsl:text>
 		<xsl:value-of select="//email"/>	
@@ -115,6 +121,7 @@
 
 	
 
+  <!-- Affichage des image du xml -->
 	<xsl:template match="image">
 		
 		<div align="center">
@@ -129,6 +136,7 @@
 
 	
 
+  <!-- Affichage des phrases de narration -->
 	<xsl:template match="paragr[@type='narration']">
 
 		

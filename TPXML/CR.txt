@@ -11,8 +11,6 @@ Manque : Champ e-mail dans infos
 1) Les auteurs de la mise en forme
 	//infos/mise_en_forme_par/auteur
 
-Etape 3:
-=======
 2) Les paragraphes de narration 
 	//corps/paragr[@type='narration']
 
@@ -31,6 +29,7 @@ Etape 3:
 7) Listez les types des paragraphes du texte (sans doublons) 
 	//corps/paragr[not(@type=preceding-sibling::paragr/@type)]/@type
 
+
 ---------------- XQuery -------------------
 
 1. Retournez les phrases en français triés en ordre alphabétique
@@ -39,10 +38,20 @@ Etape 3:
 {
   for $p in //phrase
   order by $p
-  where $p/@langue = fr
+  where $p/@langue = "fr"
   return $p
 }
 </phrasesFr>
+
+
+**** Elements de réponse ****
+
+<phrasesFr>
+  <phrase locuteur="Narrateur" modalite="declarative" langue="fr">Alors j'ai dessiné.</phrase>
+  <phrase locuteur="Narrateur" modalite="declarative" langue="fr">Alors vous imaginez ma surprise, au levé du jour, quand une drôle de petite voix m'a réveillé.</phrase>
+  <phrase locuteur="Narrateur" modalite="declarative" langue="fr">Alors, faute de patience, comme j'avais hate de commencer le démontage de mon moteur, je griffonnai ce dessin-ci.</phrase>
+
+
 
 2. Retournez les phrases françaises contenant le mot "mouton"
 
@@ -56,9 +65,17 @@ Etape 3:
 }
 </phrasesFrMouton>
 
+
+**** Elements de réponse ****
+
+<phrasesFrMouton>
+  <phrase locuteur="LePetitPrince" modalite="impérative" langue="fr">Ca ne fait rien. Dessine-moi un mouton.</phrase>
+  <phrase locuteur="Narrateur" modalite="declarative" langue="fr">Comme je n'avais jamais dessiné un mouton je refis, pour lui, un des deux seuls dessins dont j'étais capable.</phrase>
+  <phrase locuteur="LePetitPrince" modalite="interrogative" langue="fr">Crois-tu qu'il faille beaucoup d'herbe à ce mouton?</phrase>
+
 3. Pour chaque paragraphe: donnez son type, le nombre de phrases qui la compose, les modalités de ces phrases (sans répétition) ainsi que les locuteurs. (allez-y étape par étape). Astuce : pour avoir les valeurs uniques des modalités, utilisez la fonction distinct-values
 
-<paragraphe>
+<paragraphe2>
 {
   for $p in //paragr
   return 
@@ -77,19 +94,43 @@ Etape 3:
       </locuteur>
     </paragr>
 }
-</paragraphe>
+</paragraphe2>
 
+
+**** Elements de réponse ****
+
+<paragraphe2>
+  <paragr>
+    <type>type=narration</type>
+    <NombrePhrases>7</NombrePhrases>
+    <modalites>modalite=declarative</modalites>
+    <locuteur>locuteur=Narrateur</locuteur>
+  </paragr>
+  <paragr>
+    <type>type=narration</type>
+    <NombrePhrases>7</NombrePhrases>
+    <modalites>modalite=declarative</modalites>
+    <locuteur>locuteur=Narrateur</locuteur>
+  </paragr>
+  <paragr>
 
 4. Afficher la version française seulement (respectez la structure en paragraphes)
 
 
-<vf>{
+<vf2>{
   for $p in //paragr
   return
   <paragraphe>
   {data($p/phrase[@langue = "fr"])}
   </paragraphe>
-}</vf>
+}</vf2>
+
+
+**** Elements de réponse ****
+
+<vf2>
+  <paragraphe>J'ai ainsi vécu seul, sans personne avec qui parler véritablement, jusqu'à une panne dans le désert du Sahara, il y a six ans. Quelque chose s'était cassé dans mon moteur, et comme je n'avais avec moi ni mécanicien, ni passagers, je me préparai à essayer de réussir, tout seul, une réparation difficile. C'était pour moi une question de vie ou de mort. J'avais à peine de l'eau à boire pour huit jours.</paragraphe>
+
 
 5. Afficher uniquement les deuxièmes phrases des paragraphes de la version française
 
@@ -103,9 +144,16 @@ Etape 3:
     </paragraphe>
 }</vf2phrase>
 
+
+**** Elements de réponse ****
+
+<vf2phrase>
+  <paragraphe>J'ai ainsi vécu seul, sans personne avec qui parler véritablement, jusqu'à une panne dans le désert du Sahara, il y a six ans.Quelque chose s'était cassé dans mon moteur, et comme je n'avais avec moi ni mécanicien, ni passagers, je me préparai à essayer de réussir, tout seul, une réparation difficile.</paragraphe>
+
+
 6. Afficher seulement les dialogues en français du narrateur
 
-<vf>{
+<vf3>{
       for $phrase in //paragr[@type="dialogue"]/phrase
       where  $phrase/@langue ="fr"
       and $phrase/@locuteur="Narrateur"
@@ -113,11 +161,25 @@ Etape 3:
       <phrase>
       { data($phrase) }
       </phrase>
-}</vf>
+}</vf3>
+
+
+**** Elements de réponse ****
+
+<vf3>
+  <phrase>Hein!</phrase>
+  <phrase>Mais qu'est-ce que tu fais là?</phrase>
+  <phrase>Ca c'est la caisse.</phrase>
+  <phrase>Le mouton que tu veux est dedans.</phrase>
+  <phrase>Pourquoi?</phrase>
+  <phrase>Ca suffira sûrement.</phrase>
+  <phrase>Je t'ai donné un tout petit mouton.</phrase>
+</vf3>
+
 
 7. Afficher toutes les phrases du Petit Prince en français qui comporte le mot "mouton" ainsi que le nombre de ces phrases
 
-<vf nb="{count(//paragr[@type='dialogue']/phrase[@langue ='fr' 
+<vf4 nb="{count(//paragr[@type='dialogue']/phrase[@langue ='fr' 
       and @locuteur='LePetitPrince' and contains( ., 'mouton')])}">{
       for $phrase in //paragr[@type="dialogue"]/phrase
       where  $phrase/@langue ="fr"
@@ -128,4 +190,19 @@ Etape 3:
       { data($phrase) }
       </phrase>
   
-}</vf>
+}</vf4>
+
+
+**** Elements de réponse ****
+
+<vf4 nb="9">
+  <phrase>S'il vous plaît... dessine-moi un mouton!</phrase>
+  <phrase>Dessine-moi un mouton...</phrase>
+  <phrase>S'il vous plaît... dessine-moi un mouton...</phrase>
+  <phrase>Ca ne fait rien. Dessine-moi un mouton.</phrase>
+  <phrase>J'ai besoin d'un mouton.</phrase>
+  <phrase>Dessine-moi un mouton.</phrase>
+  <phrase>Tu vois bien... ce n'est pas un mouton, c'est un bélier.</phrase>
+  <phrase>Je veux un mouton qui vive longtemps.</phrase>
+  <phrase>Crois-tu qu'il faille beaucoup d'herbe à ce mouton?</phrase>
+</vf4>
