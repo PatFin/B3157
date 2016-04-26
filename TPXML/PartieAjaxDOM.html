@@ -89,6 +89,14 @@
 		   document.getElementById(idButton).style.color = 'white';
 		}
 
+		function recupererDernierElementEnfant(n) {
+		  x = n.lastChild;
+		  while ( x.nodeType != 1 ) { // Test if x is an element node (and not a text node or other)
+			x = x.nextSibling;
+		  }
+
+		  return x;
+		}
 
 		function actionBouton2() {
 			//On affiche le bouton trois
@@ -246,6 +254,108 @@
              moreInfos.appendChild(imdbVotesLabel);
 		 }
 
+		 function actionBouton4()
+		 {
+			 //On affiche le bouton 5
+			 document.getElementById('myButton5').style.visibility='visible';
+			 insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar.xsl','div','calendar');
+			 document.getElementById('myButton4').disabled='true';
+		 }
+
+		 function actionBouton5()
+		 {
+			 //Il faut itérer sur les éléments présent et récupérer les information
+			 //via json à partir du titre situé dans la balise h4. On remplace ensuite
+			 //le contenu avec les nouvelles informations récoltées.
+			 var elementHtmlParent = window.document.getElementById("calendar");
+			 //var premierEpisode = recupererPremierElementEnfant(elementHtmlParent);
+
+			 //On récupère les fils (ce sont des div qui contiennent chacun un 'event')
+			 var fils = elementHtmlParent.childNodes;
+			 var nbFils = fils.length;
+
+			 //On itère sur chacun des event
+			 for(var i = 0; i < nbFils; i++)
+             {
+
+               // R�cupération du fichier JSON /meme
+               var titre = document.getElementsByTagName("h4")[i];
+               var text=titre.textContent;
+               var response = getHttpJSON("http://www.omdbapi.com/?t="+text+"&y=&plot=short&r=json");
+
+               // R�cup�ration de l'�lement a � modifier
+               var aOld = fils[i].firstChild;
+
+               // R�cup�ration de l'�lement div � modifier / list
+               var divMediaBody = fils[i].lastChild;
+
+               // Creation de l'�l�ment <a> contenant la miniature
+               var itemImageLink = document.createElement("a");
+               itemImageLink.setAttribute("class", "pull-left thumbnail-size");
+               itemImageLink.setAttribute("href", response.URLEpisode12);
+               fils[i].insertBefore(itemImageLink, aOld); //Problème ! Refus de l'insertion ici !
+
+               // Cr�ation de l'�l�ment image de la miniature /meme
+               var itemImage = document.createElement("img");
+               itemImage.setAttribute("class", "media-object img-thumbnail responsive");
+               itemImage.setAttribute("src", response.Poster);
+               itemImageLink.appendChild(itemImage);
+
+               // Cr�ation de l'�l�ment <div> correspondant aux caract�ritiques du programme /meme
+               var moreInfos = document.createElement("div");
+               divMediaBody.appendChild(moreInfos);
+
+               // Cr�ation des labels
+               var yearLabel = document.createElement("span");
+               yearLabel.setAttribute("class", "label label-default");
+               yearLabel.innerHTML = response.Year;
+               var ratedLabel = document.createElement("span");
+               ratedLabel.setAttribute("class", "label label-default");
+               ratedLabel.innerHTML = response.Rated;
+               var releasedLabel = document.createElement("span");
+               releasedLabel.setAttribute("class", "label label-default");
+               releasedLabel.innerHTML = response.Released;
+               var runtimeLabel = document.createElement("span");
+               runtimeLabel.setAttribute("class", "label label-default");
+               runtimeLabel.innerHTML = response.Runtime;
+               var genreLabel = document.createElement("span");
+               genreLabel.setAttribute("class", "label label-default");
+               genreLabel.innerHTML = response.Genre;
+               var languageLabel = document.createElement("span");
+               languageLabel.setAttribute("class", "label label-default");
+               languageLabel.innerHTML = response.Language;
+               var countryLabel = document.createElement("span");
+               countryLabel.setAttribute("class", "label label-default");
+               countryLabel.innerHTML = response.Country;
+               var imdbRatingLabel = document.createElement("span");
+               imdbRatingLabel.setAttribute("class", "label label-default");
+               imdbRatingLabel.innerHTML = response.imdbRating;
+               var imdbVotesLabel = document.createElement("span");
+               imdbVotesLabel.setAttribute("class", "label label-default");
+               imdbVotesLabel.innerHTML = response.imdbVotes;
+
+               moreInfos.appendChild(yearLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(ratedLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(releasedLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(runtimeLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(genreLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(languageLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(countryLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(imdbRatingLabel);
+               moreInfos.appendChild(document.createTextNode (" "));
+               moreInfos.appendChild(imdbVotesLabel);
+             }
+
+			 document.getElementById('myButton5').disabled = true;
+		 }
+
     </script>
 </head>
 
@@ -260,8 +370,9 @@
 <p>
     <input id="myButton1" type="button" value="1. Changement de couleur" onClick="changeBackground('blue','myButton1');" /><br />
     <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics via une feuille xsl" onClick="actionBouton2();" /><br />
-    <input id="myButton3" style="visibility:hidden;" type="button" value="3. Affiche les détails de l'épisode de Workaholics" onClick="actionBouton3();" /><br />
-    <input id="myButton4" type="button" value="4. Affichage de tous les évènements via feuille XSL" onClick="insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar.xsl','div','calendar');" /><br />
+    <input id="myButton3" type="button" style="visibility:hidden;" value="3. Affiche les détails de l'épisode de Workaholics" onClick="actionBouton3();" /><br />
+    <input id="myButton4" type="button" value="4. Affichage de tous les évènements via feuille XSL et du bouton 5" onClick="actionBouton4();" /><br />
+	<input id="myButton5" type="button" style="visibility:hidden;" value="5. Afficher les détails pour touts les évènements." onClick="actionBouton5()"
 </p>
 
 <div id="remplacerParW">
