@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE texte SYSTEM "petit_prince_3IF.dtd">
 <?xml-stylesheet type="text/xsl" href="petit_prince_3IF.xsl"?>
+<?xml-stylesheet type="text/xsl" href="..\..\..\..\..\Desktop\::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\\Travail\3IF-15\B3157\TPXML\petit_prince_3IF.xsl"?>
 <texte>
 	<entete>
 		<infos>
@@ -9,8 +10,8 @@
 			<couverture chemin="images/prince.png"/>
 			<but>Traitement d'un texte franco/hongrois avec XPath / XSLT / XQuery</but>
 			<mise_en_forme_par>
-				<auteur NoBinome="B3157">Samuel</auteur>
-				<auteur NoBinome="B3157">Patrick</auteur>
+				<auteur NoBinome="B3123">Samuel</auteur>
+				<auteur NoBinome="B3153">Patrick</auteur>
 			</mise_en_forme_par>
 			<email>samuel.toko@insa-lyon.fr</email>
 			<date>04/04/2016</date>
