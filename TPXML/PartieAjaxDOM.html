@@ -118,14 +118,14 @@
              var elementHtmlARemplacer = recupererPremierElementEnfant(elementHtmlParent);
              // Premier �l�ment "elementName" du nouveau document (par exemple, "ul", "table"...)
              var elementAInserer = newXmlDocument.getElementsByTagName(newElementName);
-
+			 var element = elementAInserer[0];
              // Remplacement de l'�l�ment
-             elementHtmlParent.replaceChild(elementAInserer[0],elementHtmlARemplacer);
+             elementHtmlParent.replaceChild(element,elementHtmlARemplacer);
 
 			 //Le premier élément a été remplacé. On peut maintenant faire une boucle pour insérer tous les éléments suivants
-			 for ( var i = 1; i < elementAInserer.length; i++)
-			 {
-				 elementHtmlParent.appendChild(elementAInserer[i]);
+			 for ( ; 0<elementAInserer.length; )	 {
+				 element = elementAInserer[0];
+				 elementHtmlParent.appendChild(element);
 			 }
 
 		 }
