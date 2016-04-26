@@ -4,9 +4,7 @@
 	<xsl:template match="/">
 		<xsl:for-each select="//event[@uid='66684121397124000']">
 			<ul>
-				<li>
-					<xsl:value-of select="title" />
-				</li>
+				<h4><xsl:value-of select="title" /></h4>
 				<li>
 					<xsl:text>le </xsl:text>
 					<xsl:value-of select="substring(dtstart,7,2)" />
