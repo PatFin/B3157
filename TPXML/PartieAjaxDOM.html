@@ -20,6 +20,13 @@
         .media-list li {
             padding: 5px
         }
+		.event {
+			border-radius: 25px;
+			padding: 10px;
+		}
+		.event:hover {
+			background-color: lightgrey;
+		}
     </style>
 
     <script type="text/javascript">
@@ -87,7 +94,7 @@
 			//On affiche le bouton trois
 			document.getElementById('myButton3').style.visibility='visible';
 
-			insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-eventlist-workaholics.xsl','ul','remplacerParW');
+			insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-eventlist-workaholics.xsl','div','remplacerParW');
 		}
 		 function insererXmlAvecXsl(xmlDocumentUrl, xslDocumentUrl, newElementName, idInsertion)
 		 {
@@ -239,44 +246,6 @@
              moreInfos.appendChild(imdbVotesLabel);
 		 }
 
-		function ajaxCreateurs(xmlDocumentUrl) {
-
-          //chargement du fichier XML
-          var xmlDocument = getHttpXML(xmlDocumentUrl);
-          //extraction des noms � partir du document XML
-          var tableauTitre = xmlDocument.getElementsByTagName("title");
-
-          // Parcours de la liste des noms et
-          // construction d'une chaine de charact�res contenant les noms s�par�s par des espaces
-          // longueur d'une liste : attribut 'length'
-          // acc�s au texte d'un noeud "LastName" : NOM_NOEUD.firstChild.nodeValue
-          var titre = "";
-		  var titreTrouve = "";
-		  var parent;
-
-          for (i=0;i<tableauTitre.length;i++) {
-			titre = "" + tableauTitre[i].firstChild.nodeValue;
-			if(titre.includes("Workaholics"))
-			{
-				parent = tableauTitre[i].parentNode;
-
-			}
-          }
-			var dtstart = parent.getElementsByTagName("dtstart")[0].innerHTML;
-			var dtend = parent.getElementsByTagName("dtend")[0].innerHTML;
-			var summary = parent.getElementsByTagName("summary")[0].innerHTML;
-			var url = parent.getElementsByTagName("url")[0].innerHTML;
-			var description = parent.getElementsByTagName("description")[0].innerHTML;
-
-			var date = dtstart.substring(6,8) + "-" + dtstart.substring(4,6) + "-" + dtstart.substring(0,4);
-			var heureDebut = dtstart.substring(9,11)+ "h" + dtstart.substring(11,13);
-			var heureFin = dtend.substring(9,11)+ "h" + dtend.substring(11,13);
-
-			var affiche = "le " +  date + " de " + heureDebut + " à " + heureFin ;
-
-			setNom(affiche);
-        }
-
     </script>
 </head>
 
@@ -292,7 +261,7 @@
     <input id="myButton1" type="button" value="1. Changement de couleur" onClick="changeBackground('blue','myButton1');" /><br />
     <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics via une feuille xsl" onClick="actionBouton2();" /><br />
     <input id="myButton3" style="visibility:hidden;" type="button" value="3. Affiche les détails de l'épisode de Workaholics" onClick="actionBouton3();" /><br />
-    <input id="myButton4" type="button" value="4. Affichage de tous les évènements" onClick="insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar.xsl','ul','calendar');" /><br />
+    <input id="myButton4" type="button" value="4. Affichage de tous les évènements via feuille XSL" onClick="insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar.xsl','div','calendar');" /><br />
 </p>
 
 <div id="remplacerParW">
