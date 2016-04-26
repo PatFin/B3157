@@ -1,4 +1,4 @@
-B3157
+B3153
 Samuel
 Patrick
 
@@ -17,4 +17,3 @@ Etape 2 :
 7) //corps/paragr[not(@type=preceding-sibling::paragr/@type)]/@type
 
 Etape 3:
-
