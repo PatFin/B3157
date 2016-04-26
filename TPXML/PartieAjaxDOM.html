@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="iso-8859-1">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TP 3IF XPath, XSLT et XQuery + AJAX</title>
@@ -23,28 +23,9 @@
     </style>
 
     <script type="text/javascript">
-        //check if the first node is an element node
-        function recupererPremierElementEnfant(n) {
-          x = n.firstChild;
-          while ( x.nodeType != 1 ) { // Test if x is an element node (and not a text node or other)
-            x = x.nextSibling;
-          }
-
-          return x;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //remplace le contenu de l'�lement html avec l'identifiant "nom" par leNom pass� en param�tre
-        function setNom(leNom) {
-          var elementHtmlARemplir = window.document.getElementById("leNomAModifier");
-          elementHtmlARemplir.innerHTML = leNom;
-        }
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //charge le fichier XML se trouvant � l'URL relative donn� dans le param�treet le retourne
-        function getHttpXML(xmlDocumentUrl) {
-
+		//-------------------FONCTIONS RÉUTILISÉES ----------------
+		function getHttpXML(xmlDocumentUrl)
+		{
           var httpAjax;
 
           httpAjax = window.XMLHttpRequest ?
@@ -61,12 +42,19 @@
 
           return httpAjax.responseXML;
         }
-		
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Charge le fichier JSON se trouvant � l'URL donn�e en param�tre et le retourne
-        function getHttpJSON(jsonDocumentUrl) {
 
+		function recupererPremierElementEnfant(n) {
+		  x = n.firstChild;
+		  while ( x.nodeType != 1 ) { // Test if x is an element node (and not a text node or other)
+			x = x.nextSibling;
+		  }
+
+		  return x;
+		}
+
+		function getHttpJSON(jsonDocumentUrl)
+		{
             var httpAjax;
 
             httpAjax = window.XMLHttpRequest ?
@@ -84,166 +72,168 @@
                 var responseData = eval("(" + httpAjax.responseText + ")");
 
                 return responseData;
-            }
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //extraction de noms d'employ�es du fichier � l'aide de Javascript puis modification du "nom"
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        function ajaxBinomeDate(xmlDocumentUrl, xslDocumentUrl, newElementName) {
-
-          var xsltProcessor = new XSLTProcessor();
-
-          // Chargement du fichier XSL � l'aide de XMLHttpRequest synchrone (le 3� param�tre est d�fini � false)
-          var xslDocument = getHttpXML(xslDocumentUrl);
-
-          // Importation du .xsl
-          xsltProcessor.importStylesheet(xslDocument);
-
-          // Chargement du fichier XML � l'aide de XMLHttpRequest synchrone (le 3� param�tre est d�fini � false)
-          var xmlDocument =  getHttpXML(xmlDocumentUrl);
-
-          // Cr�ation du document XML transform� par le XSL
-          var newXmlDocument = xsltProcessor.transformToDocument(xmlDocument);
-
-          // Recherche du parent (dont l'id est "remplacerCeci") de l'�l�ment � remplacer dans le document HTML courant
-          var elementHtmlParent = window.document.getElementById("remplacerCeci");
-          // Premier �l�ment fils du parent
-          var elementHtmlARemplacer = recupererPremierElementEnfant(elementHtmlParent);
-          // Premier �l�ment "elementName" du nouveau document (par exemple, "ul", "table"...)
-          var elementAInserer = newXmlDocument.getElementsByTagName(newElementName)[0];
-
-          // Remplacement de l'�l�ment
-          elementHtmlParent.replaceChild(elementAInserer,elementHtmlARemplacer);
-
         }
+		//------------------FIN FONCTIONS RÉUTILISÉES-------------
 
-        function ajaxDetailsEpisode12Workaholics(fichierJSON, idElementARemplacer) {
-
-            var elementHtmlParent = window.document.getElementById(idElementARemplacer);
-
-            // R�cup�ration de l'�lement � remplacer
-            var episode = recupererPremierElementEnfant(elementHtmlParent);
-
-            // Chargement du fichier JSON
-            var response = getHttpJSON(fichierJSON);
-
-            // Creation de l'�l�ment <ul> correspondant � la liste (media-list)
-            var listItems = document.createElement("ul");
-            listItems.setAttribute("class", "media-list");
-            elementHtmlParent.replaceChild(listItems, episode);
-
-            // Creation de l'�l�ment <li> correspondant � un item de la liste
-            var item = document.createElement("li");
-            listItems.appendChild(item);
-
-            // Creation de l'�l�ment <a> contenant la miniature
-            var itemImageLink = document.createElement("a");
-            itemImageLink.setAttribute("class", "pull-left thumbnail-size");
-            itemImageLink.setAttribute("href", response.URLEpisode12);
-            item.appendChild(itemImageLink);
-
-            // Cr�ation de l'�l�ment image de la miniature
-            var itemImage = document.createElement("img");
-            itemImage.setAttribute("class", "media-object img-thumbnail responsive");
-            itemImage.setAttribute("src", response.Poster);
-            itemImageLink.appendChild(itemImage);
-
-            // Cr�ation de l'�l�ment <div> correspondant � la description (media-body)
-            var itemBody = document.createElement("div");
-            itemBody.setAttribute("class", "media-body");
-            item.appendChild(itemBody);
-
-            // Cr�ation de l'�l�ment <h4> correspondant au titre
-            var itemBodyTitle = document.createElement("h4");
-            itemBodyTitle.setAttribute("class", "media-heading title");
-            itemBodyTitle.innerHTML = response.Title;
-            itemBody.appendChild(itemBodyTitle);
-
-            // Cr�ation de l'�l�ment <div> correspondant � la date
-            var itemBodyDate = document.createElement("div");
-            itemBodyDate.innerHTML = "le " + response.DateEpisode12 + " de " + response.HeureDebutEpisode12 + " � " + response.HeureFinEpisode12;
-            itemBody.appendChild(itemBodyDate);
-
-            // Cr�ation de l'�l�ment <div> correspondant au titre de l'�pisode
-            var itemBodyTitle = document.createElement("div");
-            itemBody.appendChild(itemBodyTitle);
-            var itemBodyTitleLink = document.createElement("a");
-            itemBodyTitleLink.setAttribute("href", response.URLEpisode12);
-            itemBodyTitleLink.innerHTML = response.TitleEpisode12;
-            itemBodyTitle.appendChild(itemBodyTitleLink);
-
-            // Cr�ation de l'�l�ment <div> correspondant � l'url
-            var itemBodyUrl = document.createElement("div");
-            itemBodyUrl.innerHTML = response.URLEpisode12;
-            itemBody.appendChild(itemBodyUrl);
-
-            // Cr�ation de l'�l�ment <div> correspondant � la description
-            var itemBodyDescription = document.createElement("div");
-            itemBodyDescription.innerHTML = response.SummaryEpisode12;
-            itemBody.appendChild(itemBodyDescription);
-
-            // Cr�ation de l'�l�ment <div> correspondant aux caract�ritiques du programme
-            var moreInfos = document.createElement("div");
-            itemBody.appendChild(moreInfos);
-
-            // Cr�ation des labels
-            var yearLabel = document.createElement("span");
-            yearLabel.setAttribute("class", "label label-default");
-            yearLabel.innerHTML = response.Year;
-            var ratedLabel = document.createElement("span");
-            ratedLabel.setAttribute("class", "label label-default");
-            ratedLabel.innerHTML = response.Rated;
-            var releasedLabel = document.createElement("span");
-            releasedLabel.setAttribute("class", "label label-default");
-            releasedLabel.innerHTML = response.Released;
-            var runtimeLabel = document.createElement("span");
-            runtimeLabel.setAttribute("class", "label label-default");
-            runtimeLabel.innerHTML = response.Runtime;
-            var genreLabel = document.createElement("span");
-            genreLabel.setAttribute("class", "label label-default");
-            genreLabel.innerHTML = response.Genre;
-            var languageLabel = document.createElement("span");
-            languageLabel.setAttribute("class", "label label-default");
-            languageLabel.innerHTML = response.Language;
-            var countryLabel = document.createElement("span");
-            countryLabel.setAttribute("class", "label label-default");
-            countryLabel.innerHTML = response.Country;
-            var imdbRatingLabel = document.createElement("span");
-            imdbRatingLabel.setAttribute("class", "label label-default");
-            imdbRatingLabel.innerHTML = response.imdbRating;
-            var imdbVotesLabel = document.createElement("span");
-            imdbVotesLabel.setAttribute("class", "label label-default");
-            imdbVotesLabel.innerHTML = response.imdbVotes;
-
-            moreInfos.appendChild(yearLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(ratedLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(releasedLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(runtimeLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(genreLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(languageLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(countryLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(imdbRatingLabel);
-            moreInfos.appendChild(document.createTextNode (" "));
-            moreInfos.appendChild(imdbVotesLabel);
-        }
-		
+		//-------------FONCTIONS ÉCRITES POUR LE TP ---------------
 		// Change la couleur de l'arri�re plan
-		
 		function changeBackground(colour,idButton) {
 		   document.body.style.background = colour;
 		   document.getElementById(idButton).style.color = 'white';
 		}
-		
-		 //extraction de noms d'employ�es du fichier � l'aide de Javascript puis modification du "nom"
-        function ajaxCreateurs(xmlDocumentUrl) {
+
+
+		function actionBouton2() {
+			//On affiche le bouton trois
+			document.getElementById('myButton3').style.visibility='visible';
+
+			insererXmlAvecXsl('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-eventlist-workaholics.xsl','ul','remplacerParW');
+		}
+		 function insererXmlAvecXsl(xmlDocumentUrl, xslDocumentUrl, newElementName, idInsertion)
+		 {
+			 var xsltProcessor = new XSLTProcessor();
+
+             // Chargement du fichier XSL � l'aide de XMLHttpRequest synchrone (le 3� param�tre est d�fini � false)
+             var xslDocument = getHttpXML(xslDocumentUrl);
+
+             // Importation du .xsl
+             xsltProcessor.importStylesheet(xslDocument);
+
+             // Chargement du fichier XML � l'aide de XMLHttpRequest synchrone (le 3� param�tre est d�fini � false)
+             var xmlDocument =  getHttpXML(xmlDocumentUrl);
+
+             // Cr�ation du document XML transform� par le XSL
+             var newXmlDocument = xsltProcessor.transformToDocument(xmlDocument);
+
+             // Recherche du parent (dont l'id est "remplacerCeci") de l'�l�ment � remplacer dans le document HTML courant
+             var elementHtmlParent = window.document.getElementById(idInsertion);
+             // Premier �l�ment fils du parent (balise span dans la page)
+             var elementHtmlARemplacer = recupererPremierElementEnfant(elementHtmlParent);
+             // Premier �l�ment "elementName" du nouveau document (par exemple, "ul", "table"...)
+             var elementAInserer = newXmlDocument.getElementsByTagName(newElementName)[0];
+
+             // Remplacement de l'�l�ment
+             elementHtmlParent.replaceChild(elementAInserer,elementHtmlARemplacer);
+
+		 }
+
+		 function actionBouton3()
+		 {
+			 //On va modifier le contenu de renplacerParW
+			 var elementHtmlParent = window.document.getElementById('remplacerParW');
+			 var episode = recupererPremierElementEnfant(elementHtmlParent);
+
+			 var response = getHttpJSON('fichiersPourAjax/exemple-event-workaholics.json');
+
+			 //Ctrl-c Ctrl-v
+			 // Creation de l'�l�ment <ul> correspondant � la liste (media-list)
+             var listItems = document.createElement("ul");
+             listItems.setAttribute("class", "media-list");
+             elementHtmlParent.replaceChild(listItems, episode);
+
+             // Creation de l'�l�ment <li> correspondant � un item de la liste
+             var item = document.createElement("li");
+             listItems.appendChild(item);
+
+             // Creation de l'�l�ment <a> contenant la miniature
+             var itemImageLink = document.createElement("a");
+             itemImageLink.setAttribute("class", "pull-left thumbnail-size");
+             itemImageLink.setAttribute("href", response.URLEpisode12);
+             item.appendChild(itemImageLink);
+
+             // Cr�ation de l'�l�ment image de la miniature
+             var itemImage = document.createElement("img");
+             itemImage.setAttribute("class", "media-object img-thumbnail responsive");
+             itemImage.setAttribute("src", response.Poster);
+             itemImageLink.appendChild(itemImage);
+
+             // Cr�ation de l'�l�ment <div> correspondant � la description (media-body)
+             var itemBody = document.createElement("div");
+             itemBody.setAttribute("class", "media-body");
+             item.appendChild(itemBody);
+
+             // Cr�ation de l'�l�ment <h4> correspondant au titre
+             var itemBodyTitle = document.createElement("h4");
+             itemBodyTitle.setAttribute("class", "media-heading title");
+             itemBodyTitle.innerHTML = response.Title;
+             itemBody.appendChild(itemBodyTitle);
+
+             // Cr�ation de l'�l�ment <div> correspondant � la date
+             var itemBodyDate = document.createElement("div");
+             itemBodyDate.innerHTML = "le " + response.DateEpisode12 + " de " + response.HeureDebutEpisode12 + " � " + response.HeureFinEpisode12;
+             itemBody.appendChild(itemBodyDate);
+
+             // Cr�ation de l'�l�ment <div> correspondant au titre de l'�pisode
+             var itemBodyTitle = document.createElement("div");
+             itemBody.appendChild(itemBodyTitle);
+             var itemBodyTitleLink = document.createElement("a");
+             itemBodyTitleLink.setAttribute("href", response.URLEpisode12);
+             itemBodyTitleLink.innerHTML = response.TitleEpisode12;
+             itemBodyTitle.appendChild(itemBodyTitleLink);
+
+             // Cr�ation de l'�l�ment <div> correspondant � l'url
+             var itemBodyUrl = document.createElement("div");
+             itemBodyUrl.innerHTML = response.URLEpisode12;
+             itemBody.appendChild(itemBodyUrl);
+
+             // Cr�ation de l'�l�ment <div> correspondant � la description
+             var itemBodyDescription = document.createElement("div");
+             itemBodyDescription.innerHTML = response.SummaryEpisode12;
+             itemBody.appendChild(itemBodyDescription);
+
+             // Cr�ation de l'�l�ment <div> correspondant aux caract�ritiques du programme
+             var moreInfos = document.createElement("div");
+             itemBody.appendChild(moreInfos);
+
+             // Cr�ation des labels
+             var yearLabel = document.createElement("span");
+             yearLabel.setAttribute("class", "label label-default");
+             yearLabel.innerHTML = response.Year;
+             var ratedLabel = document.createElement("span");
+             ratedLabel.setAttribute("class", "label label-default");
+             ratedLabel.innerHTML = response.Rated;
+             var releasedLabel = document.createElement("span");
+             releasedLabel.setAttribute("class", "label label-default");
+             releasedLabel.innerHTML = response.Released;
+             var runtimeLabel = document.createElement("span");
+             runtimeLabel.setAttribute("class", "label label-default");
+             runtimeLabel.innerHTML = response.Runtime;
+             var genreLabel = document.createElement("span");
+             genreLabel.setAttribute("class", "label label-default");
+             genreLabel.innerHTML = response.Genre;
+             var languageLabel = document.createElement("span");
+             languageLabel.setAttribute("class", "label label-default");
+             languageLabel.innerHTML = response.Language;
+             var countryLabel = document.createElement("span");
+             countryLabel.setAttribute("class", "label label-default");
+             countryLabel.innerHTML = response.Country;
+             var imdbRatingLabel = document.createElement("span");
+             imdbRatingLabel.setAttribute("class", "label label-default");
+             imdbRatingLabel.innerHTML = response.imdbRating;
+             var imdbVotesLabel = document.createElement("span");
+             imdbVotesLabel.setAttribute("class", "label label-default");
+             imdbVotesLabel.innerHTML = response.imdbVotes;
+
+             moreInfos.appendChild(yearLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(ratedLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(releasedLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(runtimeLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(genreLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(languageLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(countryLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(imdbRatingLabel);
+             moreInfos.appendChild(document.createTextNode (" "));
+             moreInfos.appendChild(imdbVotesLabel);
+		 }
+
+		function ajaxCreateurs(xmlDocumentUrl) {
 
           //chargement du fichier XML
           var xmlDocument = getHttpXML(xmlDocumentUrl);
@@ -257,13 +247,13 @@
           var titre = "";
 		  var titreTrouve = "";
 		  var parent;
-		  
+
           for (i=0;i<tableauTitre.length;i++) {
 			titre = "" + tableauTitre[i].firstChild.nodeValue;
 			if(titre.includes("Workaholics"))
 			{
 				parent = tableauTitre[i].parentNode;
-				
+
 			}
           }
 			var dtstart = parent.getElementsByTagName("dtstart")[0].innerHTML;
@@ -271,13 +261,13 @@
 			var summary = parent.getElementsByTagName("summary")[0].innerHTML;
 			var url = parent.getElementsByTagName("url")[0].innerHTML;
 			var description = parent.getElementsByTagName("description")[0].innerHTML;
-			
+
 			var date = dtstart.substring(6,8) + "-" + dtstart.substring(4,6) + "-" + dtstart.substring(0,4);
 			var heureDebut = dtstart.substring(9,11)+ "h" + dtstart.substring(11,13);
 			var heureFin = dtend.substring(9,11)+ "h" + dtend.substring(11,13);
-			
+
 			var affiche = "le " +  date + " de " + heureDebut + " à " + heureFin ;
-			
+
 			setNom(affiche);
         }
 
@@ -285,67 +275,30 @@
 </head>
 
 <body id="body">
- 
+
  <!--<BODY onload="changeBackground('red');">-->
 
 <div class="container">
 
 <h1>Exercice DOM/Ajax</h1>
 
-<p>Cette partie a pour but de vous faire d�couvrir la <a href="http://fr.wikipedia.org/wiki/Asynchronous_JavaScript_and_XML" onClick="window.open(this.href); return false;">technologie AJAX </a>ainsi que des fonctionnalit&eacute;s DOM. Sur cette page HTML, des boutons permettent de d�clencher des fonctions Javascript: celles-ci vont dynamiquement manipuler des documents XML, notamment la page HTML elle-m�me, mais aussi charger des documents XML, en extraire des informations, appliquer une feuille de style XSL, <em>etc</em>.</p>
-
-<p>Le premier bouton appelle la fonction Javascript <code>setNom</code> modifiant le contenu d'une balise <code>&lt;span&gt;</code> � partir du contenu du champ texte situ� � c�t�. </p>
-
-<p>Le deuxi&egrave;me  bouton modifie &eacute;galement un &eacute;l&eacute;ment, mais en r&eacute;cup&eacute;rant les noms (contenu des &eacute;l&eacute;ments <code>unCreateur</code>) des auteurs de mise en forme en utilisant des instructions DOM du javascript dans le fichier <a href="fichiersPourAjax/calendar-short.xml">calendar-short.xml</a>.</p>
-
-<p>Le troisi&egrave;me bouton fait appel &agrave; une fonction plus complexe qui, en chargeant les fichiers exemples <a href="fichiersPourAjax/calendar-short.xml">calendar-short.xml</a> et <a href="fichiersPourAjax/calendar-binome-date.xsl">calendar-binome-date.xsl</a>, en appliquant la feuille de style au fichier XML, et en extrayant une liste HTML (balise <code>&lt;ul&gt;</code>) du r&eacute;sultat de la transformation, modifie la page avec le r&eacute;sultat.</p>
-
-<p>Le quatri&egrave;me bouton illustre l'utilisation des fichiers JSON au travers de la fonction <code>getHttpJSON</code>. Il r�cup�re et affiche les informations d'un �v�nement de calendrier repr�sent� en JSON  dans le fichier <a href="fichiersPourAjax/exemple-event-workaholics.json">exemple-event-workaholics.json</a>. Il utilise pour cela le framework <a href="http://getbootstrap.com/">Twitter Bootstrap</a> comme vous devrez le faire � partir du bouton 2.</p>
-
-<p class="instruction">Consultez le code source de cette page pour comprendre le fonctionnement du code Javascript (entre les balises &lt;script&gt;) et l'organisation des �l�ments HTML concern�s. Testez les  boutons. N'h&eacute;sitez pas &agrave; recharger la page (F5) pour revenir &agrave; son &eacute;tat initial. </p>
-<p class="instruction">Passez ensuite &agrave; la section : <a href="#travail">Travail &agrave; r&eacute;aliser</a>. </p>
-<p class="instruction">Vous trouverez des informations compl�mentaires sur le site de w3schools.com sur les m�thodes <a href="http://www.w3schools.com/dom/dom_node.asp" onClick="window.open(this.href); return false;">DOM en g�n�ral</a> et sur les m�thodes <a href="http://www.w3schools.com/jsref/dom_obj_document.asp" onClick="window.open(this.href); return false;">DOM sp�cifique html</a> ainsi que sur le <a href="http://www.w3schools.com/js/default.asp">javascript</a> en g&eacute;n&eacute;ral.</p>
-
 <p>
-    <input id="myButton1" type="button" value="1. Met la couleur de fond en bleu et celle du texte du bouton en blanc" onClick="changeBackground('blue','myButton1');" /><br />
-    <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics" onClick="ajaxCreateurs('fichiersPourAjax/calendar-short.xml');" /><br />
-    <input id="myButton3" type="button" value="3. Feuille de style xsl (calendar-binome-date.xsl) sur xml (calendar-short.xml) (fn : ajaxBinomeDate) " onClick="ajaxBinomeDate('fichiersPourAjax/calendar-short.xml','fichiersPourAjax/calendar-binome-date.xsl','ul');" /><br />
-    <input id="myButton4" type="button" value="4. Affichage des d�tails d'un �venement (fn : ajaxDetailsEpisode12Workaholics)" onClick="ajaxDetailsEpisode12Workaholics('fichiersPourAjax/exemple-event-workaholics.json','remplacerCeci');" /><br />
+    <input id="myButton1" type="button" value="1. Changement de couleur" onClick="changeBackground('blue','myButton1');" /><br />
+    <input id="myButton2" type="button" value="2. Affiche le bouton 3 et les infos sur un épisode de Workaholics via une feuille xsl" onClick="actionBouton2();" /><br />
+    <input id="myButton3" style="visibility:hidden;" type="button" value="3. Affiche les détails de l'épisode de Workaholics" onClick="actionBouton3();" /><br />
+    <input id="myButton4" type="button" value="4. Affichage des détails d'un évenement (fn : ajaxDetailsEpisode12Workaholics)" onClick="ajaxDetailsEpisode12Workaholics('fichiersPourAjax/exemple-event-workaholics.json','remplacerCeci');" /><br />
 </p>
 
-<div>
-  <p>Bin&ocirc;me : <span id="leNomAModifier" style="color: red; font-weight: bold;">No Bin&ocirc;me</span>.</p>
-</div>
-<div id="remplacerCeci">
-    <span style="color: red;">Cet texte va �tre remplac� par des r&eacute;sultats provenant d'un fichier XML mis en forme par une feuille de style XSLT...</span>
+<div id="remplacerParW">
+	<span style="color:cyan;">Ce texte va être remplacé par les infos sur workaholic</span>
 </div>
 
-<div>
-  <h2 id="travail">Travail &agrave; r�aliser</h2>
-  <p>Cr&eacute;ez une page (appel&eacute;e <code>PartieAjaxDOM.html</code> en vous inspirant de cette page) contenant les boutons pour effectuer les actions suivantes :</p>
-  <ol>
-    <li>Bouton 1 : modifie la couleur de l'arri�re plan de la page en bleu et la couleur du texte du bouton en blanc. </li>
-    <li>Bouton 2 :
-      <ul>
-        <li>affiche les informations <code>&lt;title&gt;</code>, <code>&lt;dtstart&gt;/&lt;dtend&gt;</code>, <code>&lt;summary&gt;</code>, <code>&lt;url&gt;</code>, <code>&lt;description&gt;</code> des �v�nements (un seul) dont le titre contient le mot &quot;Workaholics&quot; dans le fichier <a href="fichiersPourAjax/calendar-short.xml">calendar-short.xml</a> en utilisant une feuille de style (<code>calendar-eventlist-workaholics.xsl</code>, &agrave; &eacute;crire). La date sera format�e au moyen de <code>substring</code> pour obtenir une chaine de la forme : "le DD-MM-YYYY de HHhMM � HHhMM".</li>
-        <li>affiche le Bouton 3.</li>
-      </ul>
-      Utiliser le framework <a href="http://getbootstrap.com/">Twitter Bootstrap</a> d�j� inclus dans cette page et plus particuli�rement le composant <a href="http://getbootstrap.com/components/#media-list">media-list</a> (cf. exemple 4). Le r�sultat obtenu sera compl�t� � la question suivante.    </li>
-    <li>Bouton 3 (invisible au d�but) : modifie en utilisant javascript et des fonctions DOM les informations de l'�v�nement affich&eacute;e avec le bouton 2 afin d'obtenir un r�sultat identique � l'exemple 4. Il faudra notamment  :
-      <ul>
-        <li>affiche l'image du programme.</li>
-        <li>ajoute des informations telles que l'ann�e (Year), l'age requis (Rated), la date de premi�re diffusion (Released), la dur�e (Runtime), le genre (Genre), la langue (Language), le pays (Country), le score et le nombre de votes sur IMDB (imdbRating et imdbVotes).</li>
-      </ul>
-      Pour obtenir ces informations suppl�mentaires, vous int�rogerez le service <a href="http://www.omdbapi.com">OMDB</a> accessible � l'adresse <a href="http://www.omdbapi.com">http://www.omdbapi.com</a> en utilisant la fonction <code>getHttpJSON</code> qui vous est fournie.    </li>
-    <li>Bouton 4 : affiche le calendrier complet (informations de tous les �v�nements) en utilisant une feuille de style (<code>calendar-eventlist.xsl</code>, &agrave; &eacute;crire). Trier la liste des �v�nements par ordre alphab�tique sur le <code>&lt;title&gt;</code>. Editer la feuille de style CSS de la page HTML afin que le fond des �v�nement soit l�g�rement gris� et arrondi au survol de la souris.</li>
-    <li>Bouton 5 : idem bouton 3 mais pour l'ensemble des �v�nements du calendrier affich�s sur la page.</li>
-    <li>(bonus) Bouton 6 : Proposer une id�e originale compl�tant ce que vous avez d�j� r�alis� (autres informations obtenues � partir d'<a href="http://www.omdbapi.com">OMDB</a> ou d'autres sources).</li>
-    <li>(bonus) En vous inspirant du fichier : <code>petit_prince_3IF.xsl</code> cr&eacute;er une feuille de style xsl contenant du javascript qui permet d'afficher l'extrait du texte de Petit Prince au choix : en Fran&ccedil;ais, en Hogrois ou dans les deux langues. </li>
-  </ol>
+<div style="height:150pt;">
+
 </div>
 
-<div style="height:150pt;" />
-
+<div id="calendar">
+	<span style="color: red;">Cet texte va être remplacé par le calendrier complet mis en forme par une feuille de style XSLT...</span>
 </div>
 
 </body>
