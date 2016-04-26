@@ -30,20 +30,23 @@ medium.txt:
 large.txt:
 	./generator.cs 200 64 50 > $@
 
-many.txt:
+fat.txt:
+	./generator.cs 500 64 50 > $@
+
+huge.txt:
 	./generator.cs 1000 64 30 > $@
 
 #########################
 ## program compilation
 
 %.exe: %.c
-	gcc -Wall $(CFLAGS) -lm -pthread -Ofast -o $@ $^
+	gcc -Wall $(CFLAGS) -lm -pthread -O4 -o $@ $^
 
 Question%.exe : Question%.c Stockage.c Stockage.h
-	gcc -Wall $(CFLAGS) -pthread -lm -Ofast -o $@ $< Stockage.c
+	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< Stockage.c
 
 Question10.6.exe : Question10.6.c StockageTable.c StockageTable.h
-	gcc -Wall $(CFLAGS) -pthread -lm -Ofast -o $@ $< StockageTable.c
+	gcc -Wall $(CFLAGS) -pthread -lm -O4 -o $@ $< StockageTable.c
 
 #########################
 ## program execution
@@ -58,4 +61,4 @@ run2: question2
 ## utilities
 
 clean:
-	rm -f question1 question2 tiny.txt small.txt medium.txt large.txt many.txt
+	rm *.exe
