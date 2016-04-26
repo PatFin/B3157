@@ -11,8 +11,6 @@ Manque : Champ e-mail dans infos
 1) Les auteurs de la mise en forme
 	//infos/mise_en_forme_par/auteur
 
-Etape 3:
-=======
 2) Les paragraphes de narration 
 	//corps/paragr[@type='narration']
 
