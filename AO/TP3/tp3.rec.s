@@ -5,17 +5,32 @@ main:
 	call #lcd_clear
 
 	/* emballage des arguments */
-	MOV #6, R15
-	MOV #7, R14
-	call #mult
+	MOV #0, R15
+
+	call #fact
+	
 	/* deballage de la valeur de retour de mult
 	qu’on re-emballe comme argument pour l’appel suivant */
-	MOV R13, R15
+
 	
 	call #lcd_display_number
 	/* infinite loop */
 done:
 	jmp done
+
+fact:
+	PUSH R15
+	CMP #1, R15
+	jz finfact
+	SUB #1, R15
+	call #fact
+	
+finfact:
+	POP R14
+	call #mult
+	MOV R13, R15
+	ret
+
 
 mult: 
 	MOV R14, &0x0132
@@ -25,16 +40,3 @@ mult:
 	
 	ret
 
-/*
-mult:
-	MOV #0, R13
-	MOV #0, R12
-boucle:
-	CMP R12,R15	
-	jz  fin
-	ADD #1, R12
-	ADD R14, R13
-	jmp boucle
-fin :
-	ret
-	*/
