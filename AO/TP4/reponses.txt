@@ -1,0 +1,20 @@
+Exercice 2
+
+Précision des chrnomètres
+Combien de cycles d'horloge pour compter 10ms ?
+
+10ms = 0.01 s
+
+ACLK : 32 768 Hz
+-> 33 batements pour 0.01 s
+
+Précision ? 
+0.007 de précision relative (0.7%)
+8640 000 centièmes de secondes en 1 journée (86 400 secondes par jour)
+écart de 604 800 centièmes de seconde -> 1h40 d'écart en 24h
+
+SMCLK : (32 768 * 32) Hz
+-> 10 486 batments pour 0.01 s
+24 batements par 1/100 de secondes
+
+
